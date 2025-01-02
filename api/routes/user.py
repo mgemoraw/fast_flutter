@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session as session
 router = APIRouter()
 
 
-@router.get('/', status_code=200, response_model=None)
+@router.get('/users/index', status_code=200, response_model=None)
 async def fetch_users():
     result =  conn.execute(users.select()).fetchall()
     
@@ -21,7 +21,7 @@ async def fetch_users():
     
     return data
 
-@router.post('/')
+@router.post('/users/create')
 async def insert_user(user: User):
     try:
         conn.execute(users.insert().values(name=user.name, email=user.email, password=user.password))
@@ -31,12 +31,12 @@ async def insert_user(user: User):
     return {"done": True}
 
 
-@router.put('/{id}')
+@router.put('/users/update/{id}')
 async def update_user(id: int, user: User):
    return  conn.execute(users.update().values(name=user.name, email=user.email, password=user.password).where(users.c.id==id))
 
 
-@router.delete('/{id}')
+@router.delete('/users/delete/{id}')
 async def delete_user(id: int):
     return  conn.execute(users.delete().where(users.c.id==id))
 
@@ -59,22 +59,26 @@ async def comments(id: int):
 
 
 
-@router.post("/data")
+@router.post("/homes/create")
 async def insert_home(home: Home):
-    return conn.execute(homes.insert().values(
-        location=home.location,
-        city=home.city,
-    ))
+    try:
+        return conn.execute(homes.insert().values(
+            location=home.location,
+            city=home.city,
+        ))
+    except:
+        return {"done": True}
 
 
-@router.get("/homes")
+@router.get("/homes/index")
 async def read_homes():
     result = conn.execute(homes.select())
-    print((result))
-    print(dict(result))
-    
-    for row in result:
-        print(row)
-    return {}
 
-    # return None
+    homes = []
+    for row in result:
+        homes.append(
+             {'id': row[0], 'location': row[1], 'city': row[2],}
+        )
+        print(row)   
+    return homes
+
