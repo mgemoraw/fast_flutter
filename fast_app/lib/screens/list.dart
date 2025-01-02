@@ -14,14 +14,14 @@ class MyList extends StatefulWidget {
 }
 
 Future fetch_users() async {
-  final url = Uri.parse("http://localhost:8000");
-  // final url = Uri.parse('http://10.161.70.104:8000');
+  final url = Uri.parse("http://localhost:8000/users/index");
+  // final url = Uri.parse('http://10.161.70.104:8000/users/index');
   var response = await http.get(url);
   var users = [];
   for (var u in jsonDecode(response.body)) {
     users.add(User(u['id'], u['name'], u['email'], u['password']));
   }
-  // print(response.body);
+  print(response.body);
   // print("users: $users");
   return users;
 }

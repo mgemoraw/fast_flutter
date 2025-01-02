@@ -15,15 +15,16 @@ class MyForm extends StatefulWidget {
 }
 
 Future add_users(user) async {
-  // final url = Uri.parse('http://10.161.70.104:8000');
-  final url = Uri.parse("http://localhost:8000");
+  // final url = Uri.parse('http://10.161.70.104:8000/users/create');
+  final url = Uri.parse("http://localhost:8000/users/create");
   final headers = {"Content-Type": "application/json"};
   final body = jsonEncode(<String, String>{
+    'id': user.id,
     'name': user.name,
     'email': user.email,
     'password': user.password,
   });
-  try {
+  if (user.id == 0) {
     final response = await http.post(
       url,
       headers: headers,
@@ -34,18 +35,21 @@ Future add_users(user) async {
     } else {
       print("Error: ${response.statusCode}, ${response.body}");
     }
-  } catch (err) {
-    // await http.put(Uri.parse('http://10.161.70.104:8000/' + user.id.toString()),
-    //     headers: <String, String>{
-    //       "Content-Type": 'application/json; charset=UTF-8',
-    //     },
-    //     body: jsonEncode(<String, String>{
-    //       'name': user.name,
-    //       'email': user.email,
-    //       'password': user.password,
-    //     }));
+  } else {
+    final url = Uri.parse("http://localhost:8000/users/update/${user.id}");
+    final headers = {"Content-Type": "application/json"};
+    final body = jsonEncode(<String, String>{
+      'id': user.id,
+      'name': user.name,
+      'email': user.email,
+      'password': user.password,
+    });
+    await http.put(
+      url,
+      headers: headers,
+      body: body,
+    );
     print("user data: $user");
-    print(err.toString());
   }
 
   return user;
@@ -105,7 +109,10 @@ class _MyFormState extends State<MyForm> {
                 minWidth: double.infinity,
                 onPressed: () {
                   setState(() {
-                    add_users(User(1, nameController.text, emailController.text,
+                    add_users(User(
+                        int.parse(idController.text),
+                        nameController.text,
+                        emailController.text,
                         passwordController.text));
 
                     Navigator.push(
