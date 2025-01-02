@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session as session
 router = APIRouter()
 
 
-@router.get('/', status_code=200)
+@router.get('/', status_code=200, response_model=None)
 async def fetch_users():
     result =  conn.execute(users.select()).fetchall()
     
