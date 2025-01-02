@@ -14,12 +14,15 @@ class MyList extends StatefulWidget {
 }
 
 Future fetch_users() async {
-  var response = await http.get(Uri.parse('http://127.0.0.1:8000'));
+  final url = Uri.parse("http://localhost:8000");
+  // final url = Uri.parse('http://10.161.70.104:8000');
+  var response = await http.get(url);
   var users = [];
   for (var u in jsonDecode(response.body)) {
     users.add(User(u['id'], u['name'], u['email'], u['password']));
   }
-  print(users);
+  // print(response.body);
+  // print("users: $users");
   return users;
 }
 
@@ -52,6 +55,8 @@ class _MyListState extends State<MyList> {
                               widgetName: MyForm(
                                 user: snapshot.data[index],
                               ),
+                              title: "Edit",
+                              index: 1,
                             ),
                           ),
                         );

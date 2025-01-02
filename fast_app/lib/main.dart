@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 
 void main() {
   runApp(Home(
-    widgetName: MyList().,
-    title: ));
+    widgetName: MyList(),
+    title: 'List',
+    index: 0,
+  ));
 }
 
 class MyApp extends StatelessWidget {
