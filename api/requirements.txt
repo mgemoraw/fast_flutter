@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+pymysql
+sqlalchemy
+passlib
+python-jose
+cryptography
+dotenv
+python-decouple
+logtail

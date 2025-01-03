@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, MetaData
 
-password = 'root#sgetme'
-user = 'mengist'
+password = 'sgetme'
+user = 'sgetme'
 host = 'localhost'
 port = "3306"
 database = "test"
