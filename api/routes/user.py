@@ -11,6 +11,7 @@ router = APIRouter()
 @router.get('/users/index', status_code=200, response_model=None)
 async def fetch_users():
     result =  conn.execute(users.select()).fetchall()
+    conn.commit()
     
     data = []
 
@@ -25,6 +26,7 @@ async def fetch_users():
 async def insert_user(user: User):
     try:
         conn.execute(users.insert().values(name=user.name, email=user.email, password=user.password))
+        conn.commit()
     except:
         return {"done": False}
     # return conn.execute(users.select()).fetchall() 
@@ -33,29 +35,16 @@ async def insert_user(user: User):
 
 @router.put('/users/update/{id}')
 async def update_user(id: int, user: User):
-   return  conn.execute(users.update().values(name=user.name, email=user.email, password=user.password).where(users.c.id==id))
-
+    conn.execute(users.update().values(name=user.name, email=user.email, password=user.password).where(users.c.id==id))
+    conn.commit()
+    return {"done": True}
 
 @router.delete('/users/delete/{id}')
 async def delete_user(id: int):
-    return  conn.execute(users.delete().where(users.c.id==id))
-
-
-
-
-# testing api
-@router.get('/data')
-async def index():
-    return  {"name": "First Data"}
-
-@router.get("/blog/{id}")
-async def index(id: int):
-    return {'data': id}
-
-@router.get("/blog/{id}")
-async def comments(id: int):
-    # fetch comments of the blog
-    return {'data': {"1", "2"}}
+    
+    conn.execute(users.delete().where(users.c.id==id))
+    conn.commit()
+    return {"done": True}
 
 
 
